@@ -1,20 +1,19 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models.model_products import *
-#get_all_products, get_product_by, post_product, put_product, del_product
-from models.model_quotations import *
-#get_all_quotations, get_quotation_by, post_quotation, put_quotation, del_quotation
-from models.model_customers import *
-#get_all_customers, get_customer_by, post_customer, put_customer, del_customer
-from models.model_users import *
-#get_all_users, get_user_by, post_user, put_user, del_user, login(login_email, passw)
+from models.model_workers import *
+#get_all_workers, get_worker_by, post_worker, put_worker, del_worker
+from models.model_calendars import *
+#get_all_calendars, get_calendar_by, post_calendar, put_calendar, del_calendar
+from models.model_vacations import *
+#get_all_vacations, get_vacation_by, post_vacation, put_vacation, del_vacation
+
 
 app = Flask(__name__)
 cors = CORS(app)
 
 #Crea la tabla si no existe
 def initialize_tables():
-    tables = [Product, Quotation, Customer, Users]
+    tables = [Workers, Calendars, Vacations]
 
     for table in tables:
         table.create_table()
@@ -26,166 +25,166 @@ initialize_tables()
 def hello_root():
     return '<h1>Probando el back</h1>'
 
-@app.route("/products", methods=['GET'])#Si me pides /products con GET
-def get_products():
-    products = Product.get_all_products()
-    
-    # Aquí debes procesar la lista de productos y devolverla como una respuesta adecuada, por ejemplo:
-    return products
+@app.route("/workers", methods=['GET'])#Si me pides /workers con GET
+def get_workers():
+    workers = Workers.get_all_workers()
+    print ("WORKERS", workers)
+    # Aquí debes procesar la lista de workeros y devolverla como una respuesta adecuada, por ejemplo:
+    return workers
 
-@app.route("/products/<product_id>", methods=['GET']) #Si me pides /products/ALGO con GET
-def get_product(product_id):
-    product = Product.get_product_by_id(product_id)
-    if product:        
-        return jsonify(product)
+@app.route("/workers/<worker_id>", methods=['GET']) #Si me pides /workers/ALGO con GET
+def get_worker(worker_id):
+    worker = Workers.get_worker_by_id(worker_id)
+    if worker:        
+        return jsonify(worker)
     else:
-    # Si no se encuentra el producto, puedes devolver un mensaje de error o una respuesta vacía
-        return jsonify({'message': 'Producto no encontrado'})
+    # Si no se encuentra el workero, puedes devolver un mensaje de error o una respuesta vacía
+        return jsonify({'message': 'Workero no encontrado'})
 
 
-@app.route("/products", methods=["POST"]) #Si me pides /products con POST
-def create_product():
+@app.route("/workers", methods=["POST"]) #Si me pides /workers con POST
+def create_worker():
     data= request.get_json()
-    print ('**createproduct', data)
-    Product.post_product(data)
-    response = {'message': 'Product created successfully'}
+    print ('**createworker', data)
+    Workers.post_worker(data)
+    response = {'message': 'Worker created successfully'}
     return jsonify(response), 200
 
-@app.route("/products/<product_id>", methods=["PUT"])
-def update_product(product_id):
+@app.route("/workers/<worker_id>", methods=["PUT"])
+def update_worker(worker_id):
     data = request.get_json()
-    print('**update_product', data['id'])
-    result = Product.put_product(data, product_id)
+    print('**update_worker', data)
+    result = Workers.put_worker(data, worker_id)
     if isinstance(result, str):
         return jsonify({"message": result})
     else:
-        return jsonify({"message": "Product updated successfully"})
+        return jsonify({"message": "Worker updated successfully"})
 
-@app.route("/products/<product_id>", methods=["PATCH"])
-def patch_product(product_id):
+@app.route("/workers/<worker_id>", methods=["PATCH"])
+def patch_worker(worker_id):
     data = request.get_json()
-    result = Product.patch_product(data, product_id)
+    result = Workers.patch_worker(data, worker_id)
     if isinstance(result, str):
         return jsonify({"message": result})
     else:
-        return jsonify({"message": "Product updated successfully"})   
+        return jsonify({"message": "Worker updated successfully"})   
 
-@app.route("/products/<product_id>", methods=['DELETE'])#Si me pides /products/ALGO con DELETE
-def delete_product(product_id): 
-    Product.delete_product(product_id)
-    response = {'message': 'Product deleted successfully'}
+@app.route("/workers/<worker_id>", methods=['DELETE'])#Si me pides /workers/ALGO con DELETE
+def delete_worker(worker_id): 
+    Workers.delete_worker(worker_id)
+    response = {'message': 'Worker deleted successfully'}
     return jsonify(response), 200
 
-@app.route("/quotations", methods=['GET'])#Si me pides /quotations con GET
-def get_quotations():
-    quotations = Quotation.get_all_quotations()
+@app.route("/calendars", methods=['GET'])#Si me pides /calendars con GET
+def get_calendars():
+    calendars = Calendars.get_all_calendars()
     
-    # Aquí debes procesar la lista de quotationos y devolverla como una respuesta adecuada, por ejemplo:
-    return quotations
+    # Aquí debes procesar la lista de calendaros y devolverla como una respuesta adecuada, por ejemplo:
+    return calendars
 
-@app.route("/quotations/<quotation_id>", methods=['GET']) #Si me pides /quotations/ALGO con GET
-def get_quotation(quotation_id):
-    quotation = Quotation.get_quotation_by_id(quotation_id)
-    if quotation:        
-        return jsonify(quotation)
+@app.route("/calendars/<calendar_id>", methods=['GET']) #Si me pides /calendars/ALGO con GET
+def get_calendar(calendar_id):
+    calendar = Calendars.get_calendar_by_id(calendar_id)
+    if calendar:        
+        return jsonify(calendar)
     else:
-    # Si no se encuentra el quotation, puedes devolver un mensaje de error o una respuesta vacía
-        return jsonify({'message': 'quotationo no encontrado'})
+    # Si no se encuentra el calendar, puedes devolver un mensaje de error o una respuesta vacía
+        return jsonify({'message': 'calendaro no encontrado'})
 
-@app.route("/quotations", methods=["POST"]) #Si me pides /quotations con POST
-def create_quotation():
+@app.route("/calendars", methods=["POST"]) #Si me pides /calendars con POST
+def create_calendar():
     data= request.get_json()
-    print ('**createquotation', data)
-    Quotation.post_quotation(data)
-    response = {'message': 'quotation created successfully'}
+    print ('**createcalendar', data)
+    Calendars.post_calendar(data)
+    response = {'message': 'calendar created successfully'}
     return jsonify(response), 200
 
-@app.route("/quotations/<quotation_id>", methods=["PUT"])
-def update_quotation(quotation_id):
+@app.route("/calendars/<calendar_id>", methods=["PUT"])
+def update_calendar(calendar_id):
     data = request.get_json()
-    print('**update_quotation', data['id'])
-    result = Quotation.put_quotation(data, quotation_id)
+    print('**update_calendar', data['id'])
+    result = Calendars.put_calendar(data, calendar_id)
     if isinstance(result, str):
         return jsonify({"message": result})
     else:
-        return jsonify({"message": "quotation updated successfully"})
+        return jsonify({"message": "calendar updated successfully"})
 
-@app.route("/quotations/<quotation_id>", methods=["PATCH"])
-def patch_quotation(quotation_id):
+@app.route("/calendars/<calendar_id>", methods=["PATCH"])
+def patch_calendar(calendar_id):
     data = request.get_json()
-    result = Quotation.patch_quotation(data, quotation_id)
+    result = Calendars.patch_calendar(data, calendar_id)
     if isinstance(result, str):
         return jsonify({"message": result})
     else:
-        return jsonify({"message": "quotation updated successfully"})   
+        return jsonify({"message": "calendar updated successfully"})   
 
-@app.route("/quotations/<quotation_id>", methods=['DELETE'])#Si me pides /quotations/ALGO con DELETE
-def delete_quotation(quotation_id): 
-    Quotation.delete_quotation(quotation_id)
-    response = {'message': 'quotation deleted successfully'}
+@app.route("/calendars/<calendar_id>", methods=['DELETE'])#Si me pides /calendars/ALGO con DELETE
+def delete_calendar(calendar_id): 
+    Calendars.delete_calendar(calendar_id)
+    response = {'message': 'calendar deleted successfully'}
     return jsonify(response), 200
 
-@app.route("/customers", methods=['GET'])#Si me pides /customers con GET
-def get_customers():
+@app.route("/vacations", methods=['GET'])#Si me pides /vacations con GET
+def get_vacations():
     
-    customers = Customer.get_all_customers()
+    vacations = Vacations.get_all_vacations()
     
-    # Aquí debes procesar la lista de customers y devolverla como una respuesta adecuada, por ejemplo:
-    return customers
+    # Aquí debes procesar la lista de vacations y devolverla como una respuesta adecuada, por ejemplo:
+    return vacations
 
-@app.route("/customers/<customer_id>", methods=['GET']) #Si me pides /customers/ALGO con GET
-def get_customer(customer_id):
-    customer = Customer.get_customer_by_id(customer_id)
-    if customer:        
-        return jsonify(customer)
+@app.route("/vacations/<vacation_id>", methods=['GET']) #Si me pides /vacations/ALGO con GET
+def get_vacation(vacation_id):
+    vacation = Vacations.get_vacation_by_id(vacation_id)
+    if vacation:        
+        return jsonify(vacation)
     else:
-    # Si no se encuentra el customer, puedes devolver un mensaje de error o una respuesta vacía
-        return jsonify({'message': 'customer no encontrado'})
+    # Si no se encuentra el vacation, puedes devolver un mensaje de error o una respuesta vacía
+        return jsonify({'message': 'vacation no encontrado'})
 
 
-@app.route("/customers", methods=["POST"]) #Si me pides /customers con POST
-def create_customer():
+@app.route("/vacations", methods=["POST"]) #Si me pides /vacations con POST
+def create_vacation():
     data= request.get_json()
-    print ('**createcustomer', data)
-    Customer.post_customer(data)
-    response = {'message': 'customer created successfully'}
+    print ('**createvacation', data)
+    Vacations.post_vacation(data)
+    response = {'message': 'vacation created successfully'}
     return jsonify(response), 200
 
-@app.route("/customers/<customer_id>", methods=["PUT"])
-def update_customer(customer_id):
+@app.route("/vacations/<vacation_id>", methods=["PUT"])
+def update_vacation(vacation_id):
     data = request.get_json()
-    print('**update_customer', data['id'])
-    result = Customer.put_customer(data, customer_id)
+    print('**update_vacation', data['id'])
+    result = Vacations.put_vacation(data, vacation_id)
     if isinstance(result, str):
         return jsonify({"message": result})
     else:
-        return jsonify({"message": "customer updated successfully"})
+        return jsonify({"message": "vacation updated successfully"})
 
-@app.route("/customers/<customer_id>", methods=["PATCH"])
-def patch_customer(customer_id):
+@app.route("/vacations/<vacation_id>", methods=["PATCH"])
+def patch_vacation(vacation_id):
     data = request.get_json()
-    result = Customer.patch_customer(data, customer_id)
+    result = Vacations.patch_vacation(data, vacation_id)
     if isinstance(result, str):
         return jsonify({"message": result})
     else:
-        return jsonify({"message": "customer updated successfully"})   
+        return jsonify({"message": "vacation updated successfully"})   
 
-@app.route("/customers/<customer_id>", methods=['DELETE'])#Si me pides /customers/ALGO con DELETE
-def delete_customer(customer_id): 
-    Customer.delete_customer(customer_id)
-    response = {'message': 'customer deleted successfully'}
+@app.route("/vacations/<vacation_id>", methods=['DELETE'])#Si me pides /vacations/ALGO con DELETE
+def delete_vacation(vacation_id): 
+    Vacations.delete_vacation(vacation_id)
+    response = {'message': 'vacation deleted successfully'}
     return jsonify(response), 200
 
 
 @app.route("/login", methods=['POST'])
-def get_logged_user():
+def get_logged_worker():
     login_data = request.json
-    login_email = login_data.get('login_email')
+    login_email = login_data.get('email')
     passw = login_data.get('passw')
     if login_email and passw:
-        print ('@#@#@# get_logged_user',login_data, login_email, passw)
-    user, token = Users.login(login_email, passw)
-    if user:
-        return jsonify({'user': user, 'token': token})
+        print ('@#@#@# get_logged_worker',login_data, login_email, passw)
+    worker, token, secret = Workers.login(login_email, passw)
+    if worker:
+        return jsonify({'worker': worker, 'token': token, 'secret': secret})
     
     return jsonify({'message': 'Error en el login ROUTER'})
