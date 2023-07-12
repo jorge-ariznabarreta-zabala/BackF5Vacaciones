@@ -27,7 +27,7 @@ def hello_root():
 
 @app.route("/workers", methods=['GET'])#Si me pides /workers con GET
 def get_workers():
-    workers = Workers.get_all_workers()
+    workers = Workers.get_all_workers() #trae de SQL datos. Lo explica en model_workers
     print ("WORKERS", workers)
     # Aquí debes procesar la lista de workeros y devolverla como una respuesta adecuada, por ejemplo:
     return workers
@@ -179,12 +179,13 @@ def delete_vacation(vacation_id):
 @app.route("/login", methods=['POST'])
 def get_logged_worker():
     login_data = request.json
-    login_email = login_data.get('email')
+    print(login_data)
+    login_email = login_data.get('login_email')
     passw = login_data.get('passw')
     if login_email and passw:
         print ('@#@#@# get_logged_worker',login_data, login_email, passw)
     worker, token, secret = Workers.login(login_email, passw)
     if worker:
-        return jsonify({'worker': worker, 'token': token, 'secret': secret})
+        return {'worker': worker, 'token': token, 'secret': secret}
     
     return jsonify({'message': 'Error en el login ROUTER'})
