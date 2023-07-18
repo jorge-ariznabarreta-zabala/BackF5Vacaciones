@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from models.model_workers import *
 #get_all_workers, get_worker_by, post_worker, put_worker, del_worker
-from models.model_calendars import *
-#get_all_calendars, get_calendar_by, post_calendar, put_calendar, del_calendar
 from models.model_vacations import *
 #get_all_vacations, get_vacation_by, post_vacation, put_vacation, del_vacation
 
@@ -13,7 +11,7 @@ cors = CORS(app)
 
 #Crea la tabla si no existe
 def initialize_tables():
-    tables = [Workers, Calendars, Vacations]
+    tables = [Workers, Vacations]
 
     for table in tables:
         table.create_table()
@@ -75,54 +73,7 @@ def delete_worker(worker_id):
     response = {'message': 'Worker deleted successfully'}
     return jsonify(response), 200
 
-@app.route("/calendars", methods=['GET'])#Si me pides /calendars con GET
-def get_calendars():
-    calendars = Calendars.get_all_calendars()
-    
-    # Aquí debes procesar la lista de calendaros y devolverla como una respuesta adecuada, por ejemplo:
-    return calendars
-
-@app.route("/calendars/<calendar_id>", methods=['GET']) #Si me pides /calendars/ALGO con GET
-def get_calendar(calendar_id):
-    calendar = Calendars.get_calendar_by_id(calendar_id)
-    if calendar:        
-        return jsonify(calendar)
-    else:
-    # Si no se encuentra el calendar, puedes devolver un mensaje de error o una respuesta vacía
-        return jsonify({'message': 'calendaro no encontrado'})
-
-@app.route("/calendars", methods=["POST"]) #Si me pides /calendars con POST
-def create_calendar():
-    data= request.get_json()
-    print ('**createcalendar', data)
-    Calendars.post_calendar(data)
-    response = {'message': 'calendar created successfully'}
-    return jsonify(response), 200
-
-@app.route("/calendars/<calendar_id>", methods=["PUT"])
-def update_calendar(calendar_id):
-    data = request.get_json()
-    print('**update_calendar', data['id'])
-    result = Calendars.put_calendar(data, calendar_id)
-    if isinstance(result, str):
-        return jsonify({"message": result})
-    else:
-        return jsonify({"message": "calendar updated successfully"})
-
-@app.route("/calendars/<calendar_id>", methods=["PATCH"])
-def patch_calendar(calendar_id):
-    data = request.get_json()
-    result = Calendars.patch_calendar(data, calendar_id)
-    if isinstance(result, str):
-        return jsonify({"message": result})
-    else:
-        return jsonify({"message": "calendar updated successfully"})   
-
-@app.route("/calendars/<calendar_id>", methods=['DELETE'])#Si me pides /calendars/ALGO con DELETE
-def delete_calendar(calendar_id): 
-    Calendars.delete_calendar(calendar_id)
-    response = {'message': 'calendar deleted successfully'}
-    return jsonify(response), 200
+#Vacaciones
 
 @app.route("/vacations", methods=['GET'])#Si me pides /vacations con GET
 def get_vacations():
