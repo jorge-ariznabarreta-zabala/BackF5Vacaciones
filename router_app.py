@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+app = Flask(__name__)
+cors = CORS(app)
 from models.model_workers import *
 #get_all_workers, get_worker_by, post_worker, put_worker, del_worker
 from models.model_vacations import *
 #get_all_vacations, get_vacation_by, post_vacation, put_vacation, del_vacation
 
 
-app = Flask(__name__)
-cors = CORS(app)
 
 #Crea la tabla si no existe
 def initialize_tables():
