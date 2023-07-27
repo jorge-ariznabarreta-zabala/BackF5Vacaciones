@@ -21,7 +21,7 @@ class Vacations:
         try:
             cursor.execute('''CREATE TABLE IF NOT EXISTS
             "vacations" (
-                "id" INTEGER NOT NULL UNIQUE,
+                "id" INTEGER UNIQUE,
                 "id_user" INTEGER NOT NULL,
                 "list_days" TEXT NOT NULL,
                 "approved" TEXT DEFAULT 'TRUE',
@@ -37,6 +37,8 @@ class Vacations:
     @classmethod
     #@token_required
     def post_vacation(cls, vacation):
+        print ('post_vacation', vacation)
+        print(vacation["id_user"], vacation["list_days"], vacation["approved"])
         try:
             conn = sqlite3.connect(DATABASE)
             c = conn.cursor()
@@ -44,7 +46,7 @@ class Vacations:
                          VALUES (?, ?, ?)''',
                       (vacation["id_user"], vacation["list_days"], vacation["approved"]))
             conn.commit()
-            return jsonify({'message': 'vacation created successfully'}), 200
+            return jsonify({'message': 'vacation created successfully'}), 200, vacation
         except sqlite3.Error as e:
             return jsonify({"Error": str(e)}), 500
         finally:
